@@ -1,0 +1,126 @@
+﻿<UserControl x:Class="MemeticThreatClient.Views.MainView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:MemeticThreatClient.Views"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800">
+
+    <Grid>
+        <DockPanel LastChildFill="True">
+            <Grid DockPanel.Dock="Top" MinHeight="50">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.5*"/>
+                    <ColumnDefinition Width="0.5*"/>
+                    <ColumnDefinition Width="0.5*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+            <Grid.Background>
+                    <SolidColorBrush Color="#D4D0C8"></SolidColorBrush>
+                </Grid.Background>
+                <StackPanel Grid.Column="2" Orientation="Horizontal" FlowDirection="RightToLeft">
+                    <Button HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding AuthCommand}"
+                        Margin="10 10 5 10" Content="Войти" Visibility="{Binding UnauthorizedButton_Visibility}"/>
+                    <Button HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding RegCommand}"
+                        Margin="5 10 5 10" Content="Регистрация" Visibility="{Binding UnauthorizedButton_Visibility}"/>
+                    <Button HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding LogOutCommand}"
+                        Margin="5 10 5 10" Content="Выйти" Visibility="{Binding AuthorizedButton_Visibility}"/>
+                    <Button HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding DeleteUserCommand}"
+                        Margin="5 10 5 10" Content="Удалить пользователя" Visibility="{Binding AuthorizedButton_Visibility}"/>
+                </StackPanel>
+                <TextBlock Grid.Column="0" VerticalAlignment="Center" Margin="10" TextTrimming="CharacterEllipsis"
+                        Text="{Binding UserName}" FontSize="20" FontWeight="Bold"/>
+                <TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="10" TextTrimming="CharacterEllipsis"
+                        Text="{Binding StorageInfo}" FontSize="16"/>
+                <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" BorderThickness="0 0 1 1" BorderBrush="#fffff3"
+                        Margin="10 0 10 0" >
+                    <Rectangle Height="1" Fill="#838174" />
+                </Border>
+            </Grid>
+            <Grid DockPanel.Dock="Bottom" MinHeight="25">
+                <Grid.Background>
+                    <LinearGradientBrush>
+                        <GradientStop Color="#0B256B" Offset="0"></GradientStop>
+                        <GradientStop Color="#A5C9F0" Offset="1"></GradientStop>
+                    </LinearGradientBrush>
+                </Grid.Background>
+                <ProgressBar Visibility="{Binding UploadingPBVisibility}" Maximum="{Binding FilePartsCount}" 
+                             Value="{Binding UploadedFilesCount}"/>
+            </Grid>
+            <Grid x:Name="Centre_Grid" Background="#D4D0C8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.5*" MinWidth="200" x:Name="FileInfo_Column"/>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" MinWidth="300" x:Name="FileView_Column"/>
+                </Grid.ColumnDefinitions>
+
+                <GridSplitter Grid.Column="1" Width="2" ShowsPreview="False" HorizontalAlignment="Center"
+                          VerticalAlignment="Stretch" Margin="0 10 0 10">
+                    <GridSplitter.Template>
+                        <ControlTemplate>
+                            <Border BorderThickness="0 0 1 1" BorderBrush="#fffff3">
+                                <Rectangle Width="1" Fill="#838174" />
+                            </Border>
+                        </ControlTemplate>
+                    </GridSplitter.Template>
+                </GridSplitter>
+
+                <DockPanel Grid.Column="2">
+                    <StackPanel DockPanel.Dock="Top" MinHeight="20" Orientation="Horizontal" FlowDirection="RightToLeft">
+                        <Button HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10 5 5 5"
+                                Command="{Binding UpdateButtonCommand}" MaxHeight="30" MaxWidth="30" ToolTip="Обновить">
+                            <Image Source="../Icons/refresh.png" />
+                        </Button>
+                        <Button HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5 5 5 5"
+                                Command="{Binding UploadButtonCommand}" MaxHeight="30" MaxWidth="30" ToolTip="Загрузить">
+                            <Image Source="../Icons/upload.png" />
+                        </Button>
+                        <Button HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5 5 5 5"
+                                Command="{Binding DownloadButtonCommand}" MaxHeight="30" MaxWidth="30" ToolTip="Скачать">
+                            <Image Source="../Icons/download.png" />
+                        </Button>
+                        <Button HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5 5 5 5"
+                                Command="{Binding DeleteButtonCommand}" MaxHeight="30" MaxWidth="50" ToolTip="Удалить">
+                            <Image Source="../Icons/delete.png" />
+                        </Button>
+                    </StackPanel>
+                    <TreeView ItemsSource="{Binding FileTreeCollection}" SelectedValuePath="{Binding SelectedItem}" x:Name="DCTreeViewTest" 
+                              Margin="7 0 10 10" Background="#ffffff">
+                        <TreeView.ItemTemplate>
+                            <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                                <TextBlock Text="{Binding ValueString}" />
+                            </HierarchicalDataTemplate>
+                        </TreeView.ItemTemplate>
+                        <TreeView.ItemContainerStyle>
+                            <Style TargetType="{x:Type TreeViewItem}">
+                                <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
+                            </Style>
+                        </TreeView.ItemContainerStyle>
+                    </TreeView>
+                </DockPanel>
+
+                <DockPanel Margin="10 10 7 10">
+                    <Border BorderThickness="0 0 1 1" BorderBrush="#ffffff">
+                        <Border BorderThickness="0 0 1 1" BorderBrush="#e3e3e3">
+                            <Border BorderThickness="1 1 0 0" BorderBrush="#a0a0a0">
+                                <Border BorderThickness="1 1 0 0" BorderBrush="#696969">
+                                    <StackPanel Background="#ffffff">
+                                        <TextBlock Margin="10" FontSize="16" Text="{Binding FileName}" TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Margin="10" FontSize="16" Text="{Binding FilePath}" TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Margin="10" FontSize="16" Text="{Binding FileSize}" TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Margin="10" FontSize="16" Text="{Binding FileUser}" TextTrimming="CharacterEllipsis"/>
+                                    </StackPanel>
+                                </Border>
+                            </Border>
+                        </Border>
+                    </Border>
+                </DockPanel>
+
+            </Grid>
+        </DockPanel>
+    </Grid>
+</UserControl>
